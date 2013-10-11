@@ -14,7 +14,6 @@
         button_blast: blast,
         blastCooldown: false,
         explisonID: null,
-        activeBlasts: [],
         handleInput: function () {
             if (keys.isKeyDown(this.button_up)) {
                 this.direction = 'up';
@@ -50,9 +49,6 @@
                 case 'right': this.posX += this.velocity; break;
                 default: break;
             }
-            $.each(this.activeBlasts, function (key, blast) {
-                blast.update();
-            });
         },
         draw: function () {
             // add the ship to the DOM if it doesn't exist yet
@@ -74,72 +70,17 @@
                 case 'right': ship.addClass('rotateLeft'); break;
                 default: break;
             };
-
-            $.each(this.activeBlasts, function (key, blast) {
-                blast.draw();
-            });
         },
         fireBlaster: function () {
-            if (this.activeBlasts.length == 10 || this.blastCooldown) {
+            if (this.blastCooldown) {
                 return;
             }
             this.blastCooldown = true;
             var n = this.name;
-            setTimeout(function () {getPlayerByName(n).blastCooldown=false}, 200);
-            var blast = {
-                id: 'blast',
-                owner: this,
-                posX: this.posX,
-                posY: this.posY,
-                direction: this.direction,
-                velocity: 10,
-                update: function () {
-                    switch (this.direction) {
-                        case 'up': this.posY -= this.velocity; break;
-                        case 'down': this.posY += this.velocity; break;
-                        case 'left': this.posX -= this.velocity; break;
-                        case 'right': this.posX += this.velocity; break;
-                        default: break;
-                    }
-                },
-                draw: function () {
+            setTimeout(function () { getPlayerByName(n).blastCooldown = false }, 200);
 
-                    if ($('#' + this.id).length == 0) {
-                        var rotate = '';
-                        switch (this.direction) {
-                            case 'up': rotate = 'rotate180'; break;
-                            case 'left': rotate = 'rotateRight'; break;
-                            case 'right': rotate = 'rotateLeft'; break;
-                            default: break;
-                        };
+            game.addBullet(this.posX, this.posY, this.name, this.direction);
 
-                        $('body').append('<div id="' + this.id + '" class="bullet ' + rotate + '" style="top: ' + (this.posY - 8) + 'px; left: ' + (this.posX - 8) + 'px;"></div>');
-                    }
-
-                    var bullet = $('#' + this.id);
-
-                    bullet.offset({
-                        top: this.posY - 8,
-                        left: this.posX - 8
-                    });
-                }
-            };
-
-            // create unique blast id
-            var possible = 'abcdefghijklmnopqrstuvwxyz';
-            for (var i = 0; i < 10; i++) {
-                blast.id += possible.charAt(Math.floor(Math.random() * possible.length));
-            }
-
-            // add blast
-            this.activeBlasts.splice(0, 0, blast);
-
-            // remove blast after 2 seconds
-            var ship = this;
-            setTimeout(function () {
-                var blast = ship.activeBlasts.pop();
-                $('#' + blast.id).remove();
-            }, 2000);
         },
         bulletHit: function () {
             if (rango.lifeMeter.cooldown === true)
@@ -156,7 +97,6 @@
             setTimeout(function () {
                 var div = $('#' + id);
                 div.remove();
-                console.log(div);
             }, 1610);
             
             setTimeout(function () { rango.lifeMeter.cooldown = false }, 500);
@@ -174,10 +114,10 @@ getPlayerByName = function(name){
 }
 
 CreateRandomID = function () {
-    var out;
+    var out = "";
     var possible = "qwertyuiiioplkjhgfdsazxcvbnm1234567890";
     for (var i = 0; i < 10; i++)
         out += possible.charAt(Math.floor(Math.random() * possible.length));
-    return out;
+    return out.replace("undefined", "");
 }
 

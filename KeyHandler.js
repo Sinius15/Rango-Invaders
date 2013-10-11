@@ -54,7 +54,6 @@ keys.MousePress = function (button) {
 
 keys.KeyPress = function (button) {
     if ($.inArray(button, keys.pressedKeys) === -1) {
-        console.log("now the key is pressed...");
         keys.pressedKeys.push(button);
     }
         
@@ -66,7 +65,6 @@ keys.MouseRelease = function (button) {
 }
 
 keys.KeyRelease = function (button) {
-    console.log("now the key is released");
     var index = keys.pressedKeys.indexOf(button);
     keys.pressedKeys.splice(index, 1);
 }

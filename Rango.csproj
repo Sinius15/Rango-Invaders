@@ -63,16 +63,20 @@
   <ItemGroup>
     <Content Include="BulletHandler.js" />
     <Content Include="chat.html" />
+    <Content Include="Collision.js" />
+    <Content Include="Connector.js" />
     <Content Include="Images\bullet.png" />
     <Content Include="Images\explosion.gif" />
     <Content Include="Images\heart.png" />
     <Content Include="Images\space.jpg" />
     <Content Include="Images\spaceship.png" />
     <Content Include="index.html" />
+    <Content Include="KeyHandler.js" />
     <Content Include="Libraries\jquery-1.10.2.min.js" />
     <Content Include="invaders.html" />
     <Content Include="Services\ChatService.svc" />
     <Content Include="Services\ShadowWalker.svc" />
+    <Content Include="SpaceShip.js" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>

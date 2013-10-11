@@ -10,7 +10,6 @@
     <script src="BulletHandler.js"></script>
     <script type="text/javascript">
         var rango = {};
-        var game = {};
 
         rango.start = function () {
             rango.playerOne = CreateShip(300, 300, "playerOne",keys.KEY_UP, keys.KEY_DOWN, keys.KEY_LEFT, keys.KEY_RIGHT, keys.KEY_M);
@@ -76,8 +75,6 @@
         rango.handleInput = function () {
             rango.playerOne.handleInput();
             rango.playerTwo.handleInput();
-            if (keys.isKeyDown(keys.KEY_P))
-                showDebugInfo();
         };
 
         rango.handleCollison = function () {
@@ -85,13 +82,9 @@
                 rango.playerTwo.bulletHit();
                 rango.playerOne.bulletHit();
             }
-        };
 
-        showDebugInfo = function () {
-            console.log("col box player1: ");
-            console.log(rango.playerOne.getColBox());
-            console.log("col box player2: ");
-            console.log(rango.playerTwo.getColBox());
+            game.collideBullets();
+
         };
 
         rango.update = function () {
@@ -102,7 +95,6 @@
         rango.draw = function () {
             rango.playerOne.draw();
             rango.playerTwo.draw();
-
         };
         $(rango.start);
     </script>
