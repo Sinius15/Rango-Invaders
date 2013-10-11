@@ -1,0 +1,165 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Rango Invaders</title>
+    <script src="Libraries/jquery-1.10.2.min.js" type="text/javascript"></script>
+    <script src="KeyHandler.js"></script>
+    <script src="SpaceShip.js"></script>
+    <script src="Collision.js"></script>
+    <script src="Connector.js"></script>
+    <script src="BulletHandler.js"></script>
+    <script type="text/javascript">
+        var rango = {};
+        var game = {};
+
+        rango.start = function () {
+            rango.playerOne = CreateShip(300, 300, "playerOne",keys.KEY_UP, keys.KEY_DOWN, keys.KEY_LEFT, keys.KEY_RIGHT, keys.KEY_M);
+            rango.playerTwo = CreateShip(150, 150, "playerTwo", keys.KEY_W, keys.KEY_S, keys.KEY_A, keys.KEY_D, keys.KEY_X);
+            //rango.players = [];
+
+            //connector.setPlayer("player1", 10, 20, 4, connector.getPlayers(function () { console.log(rango.players) }));
+
+            //setTimeout(function () { console.log(rango.players) }, 1000);
+
+            rango.wireInput();
+            rango.createObjects();
+            setInterval(rango.cycle, 10);
+        };
+
+        rango.createObjects = function () {
+            rango.lifeMeter = {};
+            rango.lifeMeter.life = 10;
+            for (var i = 1; i < 11; i++)
+                $('body').append('<div id="heart' + i + '" class="heart"  style="top: ' + 20 + 'px; left: ' + (i * 16 + 2 * i + 10) + 'px;"></div>');
+
+            rango.lifeMeter.update = function () {
+                for (var i = 1; i < 11; i++) {
+                    var heart = $('#heart' + i);
+                    if (i > rango.lifeMeter.life) {
+                        heart.remove();
+                        return;
+                    }
+
+                }
+            }
+        };
+
+        rango.wireInput = function () {
+            
+            $(document).mousemove(function (e) {
+                keys.MouseMove(e.button);
+            });
+            $(document).mousedown(function (e) {
+                keys.MousePress(e.button);
+            });
+            $(document).mouseup(function (e) {
+                keys.MouseRelease(e.button);
+            });
+            $(window).keydown(function (e) {
+                keys.KeyPress(e.which);
+            });
+            $(window).keyup(function (e) {
+                keys.KeyRelease(e.which);
+            });
+        };
+
+        rango.cycle = function () {
+            rango.handleInput();
+            rango.update();
+            rango.draw();
+            rango.lifeMeter.update();
+            rango.handleCollison();
+            game.renderBullets();
+            
+        };
+
+        rango.handleInput = function () {
+            rango.playerOne.handleInput();
+            rango.playerTwo.handleInput();
+            if (keys.isKeyDown(keys.KEY_P))
+                showDebugInfo();
+        };
+
+        rango.handleCollison = function () {
+            if (col.doCollide(rango.playerOne.getColBox(), rango.playerTwo.getColBox())) {
+                rango.playerTwo.bulletHit();
+                rango.playerOne.bulletHit();
+            }
+        };
+
+        showDebugInfo = function () {
+            console.log("col box player1: ");
+            console.log(rango.playerOne.getColBox());
+            console.log("col box player2: ");
+            console.log(rango.playerTwo.getColBox());
+        };
+
+        rango.update = function () {
+            rango.playerOne.update();
+            rango.playerTwo.update();
+        };
+
+        rango.draw = function () {
+            rango.playerOne.draw();
+            rango.playerTwo.draw();
+
+        };
+        $(rango.start);
+    </script>
+    <style type="text/css">
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background: url('Images/space.jpg');
+        }
+        div.spaceship {
+            position: absolute;
+            width: 32px;
+            height: 32px;
+            background-image: url('Images/spaceship.png');
+        }
+        div.explosion {
+            position: absolute;
+            width: 142px;
+            height: 200px;
+            
+        }
+        div.heart {
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            background-image: url('Images/heart.png');
+            visibility: visible;
+        }
+        div.bullet {
+            position: absolute;
+            width: 17px;
+            height: 23px;
+            background: url('Images/bullet.png');
+        }
+        .rotate180 {
+            transform: rotate(180deg);
+            -moz-transform: rotate(180deg);
+            -ms-transform: rotate(180deg);
+            -webkit-transform: rotate(180deg);
+            -o-transform: rotate(180deg);
+        }
+        .rotateRight {
+            transform: rotate(90deg);
+            -moz-transform: rotate(90deg);
+            -ms-transform: rotate(90deg);
+            -webkit-transform: rotate(90deg);
+            -o-transform: rotate(90deg);
+        }
+        .rotateLeft {
+            transform: rotate(-90deg);
+            -moz-transform: rotate(-90deg);
+            -ms-transform: rotate(-90deg);
+            -webkit-transform: rotate(-90deg);
+            -o-transform: rotate(-90deg);
+        }
+    </style>
+</head>
+<body></body>
+</html>
