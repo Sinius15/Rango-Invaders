@@ -8,40 +8,62 @@
     <script src="Collision.js"></script>
     <script src="Connector.js"></script>
     <script src="BulletHandler.js"></script>
+    <script src="TextShower.js"></script>
     <script type="text/javascript">
         var rango = {};
 
         rango.start = function () {
-            rango.playerOne = CreateShip(300, 300, "playerOne",keys.KEY_UP, keys.KEY_DOWN, keys.KEY_LEFT, keys.KEY_RIGHT, keys.KEY_M);
-            rango.playerTwo = CreateShip(150, 150, "playerTwo", keys.KEY_W, keys.KEY_S, keys.KEY_A, keys.KEY_D, keys.KEY_X);
+            rango.screenHeight = $(window).height();
+            rango.screenWidth = $(window).width();
+
+            
+            
+            rango.playerOne = CreateShip(100, rango.screenHeight / 2, "playerOne", keys.KEY_W, keys.KEY_S, keys.KEY_A, keys.KEY_D, keys.KEY_X, "Images/ship_blue.png");
+            rango.playerTwo = CreateShip(rango.screenWidth - 100, rango.screenHeight / 2, "playerTwo", keys.KEY_UP, keys.KEY_DOWN, keys.KEY_LEFT, keys.KEY_RIGHT, keys.KEY_M, "Images/ship_red.png");
             //rango.players = [];
 
             //connector.setPlayer("player1", 10, 20, 4, connector.getPlayers(function () { console.log(rango.players) }));
 
             //setTimeout(function () { console.log(rango.players) }, 1000);
 
+            
+
             rango.wireInput();
             rango.createObjects();
-            setInterval(rango.cycle, 10);
+            
+            text.onStartup();
         };
 
         rango.createObjects = function () {
-            rango.lifeMeter = {};
-            rango.lifeMeter.life = 10;
-            for (var i = 1; i < 11; i++)
-                $('body').append('<div id="heart' + i + '" class="heart"  style="top: ' + 20 + 'px; left: ' + (i * 16 + 2 * i + 10) + 'px;"></div>');
-
-            rango.lifeMeter.update = function () {
-                for (var i = 1; i < 11; i++) {
-                    var heart = $('#heart' + i);
-                    if (i > rango.lifeMeter.life) {
-                        heart.remove();
-                        return;
-                    }
-
-                }
-            }
+            for (var i = 1; i < 11; i++) {
+                var offset = (i * 16 + 2 * i + 10)
+                $('body').append('<div id="PlayerOne_heart_' + i + '" class="heart"  style="top: ' + 20 + 'px; left: ' + offset + 'px;"><img src="Images/heart_red.png"></img></div>');
+                $('body').append('<div id="PlayerTwo_heart_' + i + '" class="heart"  style="top: ' + 20 + 'px; left: ' + (rango.screenWidth-offset) + 'px;"><img src="Images/heart_blue.png"></img></div>');
+            } 
         };
+
+        rango.heartUpate = function () {
+            for (var i = 1; i < 11; i++) {
+                var heart = $('#PlayerOne_heart_' + i);
+                if (i > rango.playerOne.life) 
+                    heart.remove();
+            }
+            for (var i = 1; i < 11; i++){
+                var heart = $('#PlayerTwo_heart_' + i);
+                if (i > rango.playerTwo.life) 
+                    heart.remove();
+            }
+            if (rango.playerOne.life === 0 && rango.playerTwo.life === 0) {
+                text.onEnd("tie");
+                return;
+            }
+            if (rango.playerOne.life === 0)
+                text.onEnd("Player 2");
+            if (rango.playerTwo.life === 0)
+                text.onEnd("Player 1");
+
+
+        }
 
         rango.wireInput = function () {
             
@@ -66,7 +88,7 @@
             rango.handleInput();
             rango.update();
             rango.draw();
-            rango.lifeMeter.update();
+            rango.heartUpate();
             rango.handleCollison();
             game.renderBullets();
             
@@ -109,19 +131,39 @@
             position: absolute;
             width: 32px;
             height: 32px;
-            background-image: url('Images/spaceship.png');
         }
         div.explosion {
             position: absolute;
             width: 142px;
             height: 200px;
-            
+        }
+        div.StartText {
+            position: absolute;
+            left: 45%;
+            right: 55%;
+            top: 30%;
+            bottom: 70%;
+            width: 200px;
+            height: 100px;
+            font-family: Arial;
+            font-size: 1000%;
+            color: white;
+        }
+        div.EndText {
+            position: absolute;
+            left: 35%;
+            right: 65%;
+            top: 30%;
+            bottom: 70%;
+            color: white;
+            font-size: 200%;
+            width: 10000px;
+            font-family: Arial;
         }
         div.heart {
             position: absolute;
             width: 16px;
             height: 16px;
-            background-image: url('Images/heart.png');
             visibility: visible;
         }
         div.bullet {

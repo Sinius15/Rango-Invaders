@@ -1,7 +1,8 @@
-﻿CreateShip = function (posX, posY, name, up, down, left, right, blast) {
+﻿CreateShip = function (posX, posY, name, up, down, left, right, blast, img) {
     return {
         name: name,
         size: 32,
+        life: 10,
         direction: 'down',
         speed: 3,
         velocity: 0,
@@ -13,6 +14,7 @@
         button_right: right,
         button_blast: blast,
         blastCooldown: false,
+        lifeCooldown: false,
         explisonID: null,
         handleInput: function () {
             if (keys.isKeyDown(this.button_up)) {
@@ -49,11 +51,20 @@
                 case 'right': this.posX += this.velocity; break;
                 default: break;
             }
+
+            if (this.posX < this.size/2)
+                this.posX = this.size / 2;
+            if (this.posY < this.size / 2)
+                this.posY = this.size / 2;
+            if (this.posY > rango.screenHeight - this.size / 2)
+                this.posY = rango.screenHeight - this.size / 2
+            if (this.posX > rango.screenWidth - this.size / 2)
+                this.posX = rango.screenWidth - this.size / 2
+
         },
         draw: function () {
-            // add the ship to the DOM if it doesn't exist yet
             if ($('#' + this.name).length == 0) 
-                $('body').append('<div id="' + this.name + '" class="spaceship"></div>');
+                $('body').append('<div id="' + this.name + '" class="spaceship"><img src= "'+img+'"></img></div>');
 
             var ship = $('#' + this.name);
 
@@ -83,24 +94,26 @@
 
         },
         bulletHit: function () {
-            if (rango.lifeMeter.cooldown === true)
+            if (this.lifeCooldown === true)
                 return;
-            rango.lifeMeter.cooldown = true;
+            this.lifeCooldown = true
 
             
-            this.explisonID = CreateRandomID();
+            this.explisonID = this.name + '_explosion_' + CreateRandomID();
             $('body').append('<div id="' + this.explisonID + '" class="explosion"  style="top: ' + (this.posY-100) + 'px; left: ' + (this.posX-71) + 'px;"><img src="Images/explosion.gif?'+this.explisonID+'"></img></div>');
 
-            rango.lifeMeter.life = rango.lifeMeter.life - 1;
+            this.life = this.life - 1;
 
             var id = this.explisonID;
             setTimeout(function () {
                 var div = $('#' + id);
                 div.remove();
-            }, 1610);
-            
-            setTimeout(function () { rango.lifeMeter.cooldown = false }, 500);
+            }, 1610);            
 
+            if(this.name === 'playerOne')
+                setTimeout(function () { rango.playerOne.lifeCooldown = false }, 500);
+            if (this.name === 'playerTwo')
+                setTimeout(function () { rango.playerTwo.lifeCooldown = false }, 500);
         }
     };
 };

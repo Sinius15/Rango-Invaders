@@ -65,11 +65,14 @@
     <Content Include="chat.html" />
     <Content Include="Collision.js" />
     <Content Include="Connector.js" />
+    <Content Include="game.html" />
     <Content Include="Images\bullet.png" />
     <Content Include="Images\explosion.gif" />
-    <Content Include="Images\heart.png" />
+    <Content Include="Images\heart_blue.png" />
+    <Content Include="Images\heart_red.png" />
+    <Content Include="Images\ship_blue.png" />
+    <Content Include="Images\ship_red.png" />
     <Content Include="Images\space.jpg" />
-    <Content Include="Images\spaceship.png" />
     <Content Include="index.html" />
     <Content Include="KeyHandler.js" />
     <Content Include="Libraries\jquery-1.10.2.min.js" />
@@ -77,6 +80,7 @@
     <Content Include="Services\ChatService.svc" />
     <Content Include="Services\ShadowWalker.svc" />
     <Content Include="SpaceShip.js" />
+    <Content Include="TextShower.js" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>

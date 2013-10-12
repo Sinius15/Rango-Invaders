@@ -68,11 +68,10 @@ game.renderBullets = function () {
 }
 
 CreateRandomID = function () {
-    var out;
+    var out = "";
     var possible = "qwertyuiiioplkjhgfdsazxcvbnm1234567890";
     for (var i = 0; i < 10; i++)
         out += possible.charAt(Math.floor(Math.random() * possible.length));
-    return out;
+    return out.replace("undefined", "");
 }
-
 
